@@ -1,0 +1,50 @@
+
+Hi
+
+What movies are available?
+
+Tell me the showtimes
+
+I want to book tickets
+
+Dune
+
+3
+
+Evening: 5:30 PM
+
+Goodbye
+
+-------------------------------------------------------------------------------------------
+
+Hello! Welcome to ChatBot. How can I assist you today?
+
+You: Hi
+
+ChatBot: Hi! Ready to book some movie tickets?
+
+You: What movies are available?
+
+ChatBot: Here is the list of movies: Interstellar, The Dark Knight, Dune. Which movie would you like to watch?
+
+You: Tell me the showtimes
+
+ChatBot: Here are the showtimes for the available movies:Interstellar: Morning: 10:00 AM, Afternoon: 2:00 PM, Evening: 6:00 PM
+
+You: I want to book tickets
+
+ChatBot: Sure! How many tickets would you like to book?
+Which movie would you like to watch? :Dune
+How many tickets do you need? :3
+At what time would you like to watch the movie? :Evening: 5:30 PM
+
+ChatBot: Booking confirmed! You have booked 3 tickets for Dune at Evening: 5:30 PM.
+Total amount: Rs. 300.
+
+You: Ok GoodBy
+
+ChatBot: None
+
+You: Ok Goodbye
+
+ChatBot: Thank you for visiting ChatBot. Have a great day!

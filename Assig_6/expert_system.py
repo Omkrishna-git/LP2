@@ -84,7 +84,7 @@ def export_to_excel():
 # Create GUI window
 root = tk.Tk()
 root.title("Employee Performance Evaluation")
-root.geometry("500x500")
+root.geometry("800x800")
 
 tk.Label(root, text="Employee Name:").pack()
 entry_name = tk.Entry(root)
