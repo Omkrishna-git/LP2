@@ -142,7 +142,7 @@ public:
         cout<<"Total Sum of weight of edges included in Prims Algo : "<<totalSum<<endl;
     }
 };
-
+ 
 int main() {
     int choice;
     do {
