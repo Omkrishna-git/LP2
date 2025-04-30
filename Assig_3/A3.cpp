@@ -22,44 +22,6 @@ public:
         }
     }
 
-    // Course Schedule (Kahn’s Algorithm for Topological Sorting)
-    vector<int> findCourseOrder(int numCourses) {
-        unordered_map<int, int> indegree;
-        queue<int> q;
-        vector<int> order;
-
-        for (int i = 0; i < numCourses; i++) {
-            indegree[i] = 0;
-        }
-
-        for (auto& i : adjList) {
-            for (auto& nbr : i.second) {
-                indegree[nbr.first]++;
-            }
-        }
-
-        for (int i = 0; i < numCourses; i++) {
-            if (indegree[i] == 0) {
-                q.push(i);
-            }
-        }
-
-        while (!q.empty()) {
-            int front = q.front();
-            q.pop();
-            order.push_back(front);
-
-            for (auto& nbr : adjList[front]) {
-                indegree[nbr.first]--;
-                if (indegree[nbr.first] == 0) {
-                    q.push(nbr.first);
-                }
-            }
-        }
-
-        return order.size() == numCourses ? order : vector<int>{};
-    }
-
     // Dijkstra’s Algorithm
     void dijkstra(int src) {
         unordered_map<int, int> dist;
@@ -147,40 +109,13 @@ int main() {
     int choice;
     do {
         cout << "\nMenu:\n";
-        cout << "1. Course Schedule (Find Order of Courses)\n";
-        cout << "2. Dijkstra's Algorithm (Shortest Path)\n";
-        cout << "3. Prim's Algorithm (Minimum Spanning Tree)\n";
+        cout << "1. Dijkstra's Algorithm (Shortest Path)\n";
+        cout << "2. Prim's Algorithm (Minimum Spanning Tree)\n";
         cout << "4. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
 
         if (choice == 1) {
-            Graph g;
-            int numCourses, edges, u, v;
-            cout << "Enter number of courses: ";
-            cin >> numCourses;
-            cout << "Enter number of prerequisites (edges): ";
-            cin >> edges;
-
-            cout << "Enter prerequisites (course prerequisite weight=1):\n";
-            for (int i = 0; i < edges; i++) {
-                cin >> u >> v;
-                g.addEdge(v, u, 1, true);
-            }
-
-            cout << "Graph Representation:\n";
-            g.printGraph();
-            vector<int> order = g.findCourseOrder(numCourses);
-
-            if (!order.empty()) {
-                cout << "Valid course order: ";
-                for (int c : order) cout << c << " ";
-                cout << endl;
-            } else {
-                cout << "Cycle detected! Courses cannot be completed.\n";
-            }
-
-        } else if (choice == 2) {
             Graph g;
             int nodes, edges, u, v, wt, src;
             cout << "Enter number of nodes and edges: ";
@@ -198,7 +133,8 @@ int main() {
             cin >> src;
             g.dijkstra(src);
 
-        } else if (choice == 3) {
+        } 
+        else if (choice == 2) {
             Graph g;
             int nodes, edges, u, v, wt;
             cout << "Enter number of nodes and edges: ";
@@ -214,17 +150,29 @@ int main() {
             g.printGraph();
             g.primMST();
 
-        } else if (choice == 4) {
+        } 
+        else if (choice == 3) {
             cout << "Exiting...\n";
-        } else {
+        }
+        else {
             cout << "Invalid choice! Please enter a valid option.\n";
         }
 
-    } while (choice != 4);
+    } while (choice != 3);
 
     return 0;
 }
 
+
+// Graph g ; 
+//     g.addNode( "Katraj" , "PICT" ) ;
+//     g.addNode( "Bharti" , "Katraj" ) ; 
+//     g.addNode( "Bharti" , "PICT" ) ;
+//     g.addNode( "Katraj" , "SKNCOE" ) ; 
+//     g.addNode( "PICT" , "SKNCOE" ) ;
+//     g.addNode( "SKNCOE" , "Temple" ) ; 
+//     g.addNode( "Temple" , "Katraj" ) ; 
+//     g.addNode( "Temple" , "Kondhwa" ) ; 
 
 // 3 1
 // 5 2

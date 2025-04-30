@@ -1,0 +1,209 @@
+
+public class MatrixOperations {
+    public String matrix1 { get; set; } // Input for first matrix
+    public String matrix2 { get; set; } // Input for second matrix
+    public String result { get; set; }  // To store the result
+    
+    public MatrixOperations() {
+        matrix1 = '';
+        matrix2 = '';
+        result = '';
+    }
+
+    // Helper function to convert input string to a 2D list of integers
+    private List<List<Integer>> stringToMatrix(String matrixInput) {
+        List<List<Integer>> matrix = new List<List<Integer>>();
+        try {
+            // Split input by rows (line breaks)
+            List<String> rows = matrixInput.split('\n');
+            for (String row : rows) {
+                // Split row by commas and convert to integers
+                List<String> values = row.split(',');
+                List<Integer> rowList = new List<Integer>();
+                for (String value : values) {
+                    rowList.add(Integer.valueOf(value.trim()));
+                }
+                matrix.add(rowList);
+            }
+        } catch (Exception e) {
+            result = 'Error: Invalid matrix input.';
+        }
+        return matrix;
+    }
+
+    // Matrix addition
+    public void addMatrices() {
+        try {
+            List<List<Integer>> mat1 = stringToMatrix(matrix1);
+            List<List<Integer>> mat2 = stringToMatrix(matrix2);
+
+            // Validate matrix dimensions for addition
+            if (mat1.size() != mat2.size() || mat1[0].size() != mat2[0].size()) {
+                result = 'Error: Matrices must have the same dimensions for addition.';
+                return;
+            }
+
+            List<List<Integer>> sumMatrix = new List<List<Integer>>();
+            for (Integer i = 0; i < mat1.size(); i++) {
+                List<Integer> sumRow = new List<Integer>();
+                for (Integer j = 0; j < mat1[i].size(); j++) {
+                    sumRow.add(mat1[i][j] + mat2[i][j]);
+                }
+                sumMatrix.add(sumRow);
+            }
+            result = 'Sum Matrix: ' + formatMatrix(sumMatrix);
+        } catch (Exception e) {
+            result = 'Error: Invalid input for matrix addition.';
+        }
+    }
+
+    // Matrix multiplication
+    public void multiplyMatrices() {
+        try {
+            List<List<Integer>> mat1 = stringToMatrix(matrix1);
+            List<List<Integer>> mat2 = stringToMatrix(matrix2);
+
+            // Validate matrix dimensions for multiplication (mat1's columns == mat2's rows)
+            if (mat1[0].size() != mat2.size()) {
+                result = 'Error: Matrices cannot be multiplied (columns of first matrix != rows of second matrix).';
+                return;
+            }
+
+            List<List<Integer>> productMatrix = new List<List<Integer>>();
+            for (Integer i = 0; i < mat1.size(); i++) {
+                List<Integer> productRow = new List<Integer>();
+                for (Integer j = 0; j < mat2[0].size(); j++) {
+                    Integer sum = 0;
+                    for (Integer k = 0; k < mat2.size(); k++) {
+                        sum += mat1[i][k] * mat2[k][j];
+                    }
+                    productRow.add(sum);
+                }
+                productMatrix.add(productRow);
+            }
+            result = 'Product Matrix: ' + formatMatrix(productMatrix);
+        } catch (Exception e) {
+            result = 'Error: Invalid input for matrix multiplication.';
+        }
+    }
+
+    // Helper function to format a 2D matrix into a string for display
+    private String formatMatrix(List<List<Integer>> matrix) {
+        String formattedMatrix = '';
+        for (List<Integer> row : matrix) {
+            formattedMatrix += '[' + String.join(row, ', ') + '], ';
+        }
+        return formattedMatrix;
+    }
+}
+
+
+*****************************************************************************************
+
+
+<apex:page controller="MatrixOperations">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-cogs"></i> Matrix Operations</h1>
+            <apex:pageBlock title="Matrix Operations (Addition/Multiplication)">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Enter Matrix 1 (rows separated by line breaks, elements by commas):" styleClass="form-label"/>
+                    <apex:inputTextarea value="{!matrix1}" rows="5" cols="30" style="padding: 6px;"/>
+
+                    <apex:outputLabel value="Enter Matrix 2 (rows separated by line breaks, elements by commas):" styleClass="form-label"/>
+                    <apex:inputTextarea value="{!matrix2}" rows="5" cols="30" style="padding: 6px;"/>
+
+                    <apex:commandButton value="Add Matrices" action="{!addMatrices}" rerender="resultPanel" styleClass="convert-button"/>
+                    <apex:commandButton value="Multiply Matrices" action="{!multiplyMatrices}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="{!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>
+
+
+****************************************************************************
+
+matrix 1
+1, 2, 3
+4, 5, 6
+7, 8, 9
+
+matrix 2
+9, 8, 7
+6, 5, 4
+3, 2, 1
+
+Result
+10, 10, 10
+10, 10, 10
+10, 10, 10
+
+
+-----------------------------
+
+matrix 1
+1, 2, 3
+4, 5, 6
+
+matrix 2
+7, 8
+9, 10
+11, 12
+
+Result
+58, 64
+139, 154

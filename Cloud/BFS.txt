@@ -1,0 +1,148 @@
+public class BFS {
+    public Map<Integer, List<Integer>> adjList { get; set; }
+    public List<Integer> bfsResult { get; set; }
+    public Integer startNode { get; set; }
+    public String graphInput { get; set; }
+
+    public BFS() {
+        bfsResult = new List<Integer>();
+        graphInput = '';  // format: 0:1,2;1:0,3,4
+        startNode = 0;
+        adjList = new Map<Integer, List<Integer>>();
+    }
+
+    public void buildGraphFromInput() {
+        adjList.clear();
+        if (String.isBlank(graphInput)) return;
+
+        List<String> entries = graphInput.split(';');
+
+        for (String entry : entries) {
+            List<String> parts = entry.split(':');
+            if (parts.size() != 2) continue;
+
+            Integer node = Integer.valueOf(parts[0].trim());
+            List<Integer> neighbors = new List<Integer>();
+
+            for (String n : parts[1].split(',')) {
+                if (!String.isBlank(n)) {
+                    neighbors.add(Integer.valueOf(n.trim()));
+                }
+            }
+            adjList.put(node, neighbors);
+        }
+    }
+
+    public void runBFS() {
+        bfsResult.clear();
+        buildGraphFromInput(); // Build the graph from the input string
+
+        if (!adjList.containsKey(startNode)) return;
+
+        Set<Integer> visited = new Set<Integer>();
+        List<Integer> queue = new List<Integer>();
+
+        queue.add(startNode);
+        visited.add(startNode);
+
+        while (!queue.isEmpty()) {
+            Integer current = queue.remove(0);
+            bfsResult.add(current);
+
+            List<Integer> neighbors = adjList.get(current);
+            if (neighbors == null) neighbors = new List<Integer>();
+
+            for (Integer neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    queue.add(neighbor);
+                    visited.add(neighbor);
+                }
+            }
+        }
+    }
+} 
+
+
+***********************************************************************************************************************
+
+
+<apex:page controller="BFS">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    
+    <style>
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            font-family: 'Segoe UI', sans-serif;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+        }
+        .result-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solidrgb(184, 184, 184);
+            background-color:rgb(118, 118, 118);
+            border-radius: 6px;
+        }
+        .output-box {
+            font-size: 16px;
+            font-family: monospace;
+            color: #1C2833;
+        }
+        .bfs-button {
+            background-color:rgb(4, 78, 128);
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+        }
+        .bfs-button:hover {
+            background-color:rgb(13, 94, 147);
+            cursor: pointer;
+        }
+    </style>
+
+    <h1><i class="fas fa-project-diagram"></i> BFS Traversal in Apex</h1>
+
+    <apex:form >
+        <apex:pageBlock title="Graph Input & BFS Traversal">
+            <apex:pageBlockSection columns="1" >
+
+                <apex:outputLabel value="Enter Graph (e.g. 0:1,2;1:0,3,4)" styleClass="form-label"/>
+                <apex:inputTextarea value="{!graphInput}" cols="60" rows="4"/>
+
+                <apex:outputLabel value="Start Node:" styleClass="form-label"/>
+                <apex:inputText value="{!startNode}" />
+
+                <apex:commandButton value="Run BFS" action="{!runBFS}" rerender="resultPanel" styleClass="bfs-button"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <apex:outputPanel id="resultPanel" layout="block" styleClass="result-section">
+            <h2 style="color:#2E86C1;">Traversal Order:</h2>
+            <apex:repeat value="{!bfsResult}" var="node">
+                <apex:outputText value="{!node} " styleClass="output-box"/>
+            </apex:repeat>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>
+
+
+
+--------------------------------------------------------------------------------
+
+
+A: B, C
+B: A, D
+C: A
+D: B
+
+
+1: 2, 3
+2: 1, 4
+3: 1
+4: 2

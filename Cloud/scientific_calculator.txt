@@ -1,0 +1,135 @@
+public class ScientificCalculator {
+    public String input1 { get; set; }
+    public String input2 { get; set; }
+    public String result { get; set; }
+    public String operation { get; set; }
+
+    public ScientificCalculator() {
+        input1 = '';
+        input2 = '';
+        result = '';
+        operation = '';
+    }
+
+    public void calculate() {
+        try {
+            Double num1 = String.isEmpty(input1) ? 0 : Double.valueOf(input1);
+            Double num2 = String.isEmpty(input2) ? 0 : Double.valueOf(input2);
+
+            if (operation == 'add') {
+                result = String.valueOf(num1 + num2);
+            } else if (operation == 'subtract') {
+                result = String.valueOf(num1 - num2);
+            } else if (operation == 'multiply') {
+                result = String.valueOf(num1 * num2);
+            } else if (operation == 'divide') {
+                if (num2 == 0) {
+                    result = 'Error: Division by zero';
+                } else {
+                    result = String.valueOf(num1 / num2);
+                }
+            } else if (operation == 'sqrt') {
+                result = String.valueOf(Math.sqrt(num1));
+            } else if (operation == 'power') {
+                result = String.valueOf(Math.pow(num1, num2));
+            } else if (operation == 'sin') {
+                result = String.valueOf(Math.sin(num1 * (Math.PI / 180)));
+            } else if (operation == 'cos') {
+                result = String.valueOf(Math.cos(num1 * (Math.PI / 180)));
+            } else if (operation == 'tan') {
+                result = String.valueOf(Math.tan(num1 * (Math.PI / 180)));
+            }
+        } catch (Exception e) {
+            result = 'Error: Invalid Input';
+        }
+    }
+}
+
+
+*****************************************************************************************************************************
+
+
+<apex:page controller="ScientificCalculator">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-calculator"></i> Scientific Calculator</h1>
+            <apex:pageBlock title="Scientific Calculator">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Enter First Value:" styleClass="form-label"/>
+                    <apex:inputText value="{!input1}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:outputLabel value="Enter Second Value (optional):" styleClass="form-label"/>
+                    <apex:inputText value="{!input2}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:selectList value="{!operation}" size="1">
+                        <apex:selectOption itemLabel="Select Operation" itemValue=""/>
+                        <apex:selectOption itemLabel="Add" itemValue="add"/>
+                        <apex:selectOption itemLabel="Subtract" itemValue="subtract"/>
+                        <apex:selectOption itemLabel="Multiply" itemValue="multiply"/>
+                        <apex:selectOption itemLabel="Divide" itemValue="divide"/>
+                        <apex:selectOption itemLabel="Square Root" itemValue="sqrt"/>
+                        <apex:selectOption itemLabel="Power" itemValue="power"/>
+                        <apex:selectOption itemLabel="Sin" itemValue="sin"/>
+                        <apex:selectOption itemLabel="Cos" itemValue="cos"/>
+                        <apex:selectOption itemLabel="Tan" itemValue="tan"/>
+                    </apex:selectList>
+
+                    <apex:commandButton value="Calculate" action="{!calculate}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="Result: {!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>

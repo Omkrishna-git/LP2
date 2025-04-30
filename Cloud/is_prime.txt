@@ -1,0 +1,170 @@
+public class PrimeNumberCheck {
+    public Integer inputNumber { get; set; }  // Renamed from 'number'
+    public Integer startRange { get; set; }
+    public Integer endRange { get; set; }
+    public String result { get; set; }
+
+    public PrimeNumberCheck() {
+        inputNumber = 0;
+        startRange = 0;
+        endRange = 0;
+        result = '';
+    }
+
+    // Check if a given number is prime
+    public void checkPrime() {
+        try {
+            if (inputNumber == null || inputNumber <= 1) {
+                result = 'Error: The number must be greater than 1 to be prime.';
+                return;
+            }
+
+            Boolean isPrime = true;
+            Double sqrtVal = Math.sqrt(inputNumber);
+            Integer maxCheck = Integer.valueOf(Math.floor(sqrtVal));
+
+            for (Integer i = 2; i <= maxCheck; i++) {
+                if (Math.mod(inputNumber, i) == 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+
+            if (isPrime) {
+                result = inputNumber + ' is a prime number.';
+            } else {
+                result = inputNumber + ' is not a prime number.';
+            }
+        } catch (Exception e) {
+            result = 'Error: Invalid input.';
+        }
+    }
+
+    // Find all prime numbers between startRange and endRange
+    public void findPrimesInRange() {
+        try {
+            if (startRange == null || endRange == null || startRange > endRange) {
+                result = 'Error: Invalid range.';
+                return;
+            }
+
+            if (startRange < 2) {
+                startRange = 2;
+            }
+
+            List<String> primes = new List<String>();
+
+            for (Integer i = startRange; i <= endRange; i++) {
+                if (isPrimeNumber(i)) {
+                    primes.add(String.valueOf(i));
+                }
+            }
+
+            if (primes.isEmpty()) {
+                result = 'No prime numbers found in the given range.';
+            } else {
+                result = 'Prime numbers between ' + startRange + ' and ' + endRange + ': ' + String.join(primes, ', ');
+            }
+        } catch (Exception e) {
+            result = 'Error: Invalid input for prime range.';
+        }
+    }
+
+    // Helper function
+    private Boolean isPrimeNumber(Integer num) {
+        if (num <= 1) return false;
+
+        Integer maxCheck = Integer.valueOf(Math.floor(Math.sqrt(num)));
+        for (Integer i = 2; i <= maxCheck; i++) {
+            if (Math.mod(num, i) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+****************************************************************************************************
+
+
+<apex:page controller="PrimeNumberCheck">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-check-circle"></i> Prime Number Checker</h1>
+            <apex:pageBlock title="Prime Number Operations">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Enter Number to Check if Prime:" styleClass="form-label"/>
+                    <apex:inputText value="{!inputNumber}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:commandButton value="Check if Prime" action="{!checkPrime}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:pageBlock title="Find Prime Numbers in a Range">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Enter Start Range:" styleClass="form-label"/>
+                    <apex:inputText value="{!startRange}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:outputLabel value="Enter End Range:" styleClass="form-label"/>
+                    <apex:inputText value="{!endRange}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:commandButton value="Find Primes in Range" action="{!findPrimesInRange}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="{!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>

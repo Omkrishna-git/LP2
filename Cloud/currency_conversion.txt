@@ -1,0 +1,154 @@
+public class CurrencyConverter {
+    public Decimal amount { get; set; }
+    public String fromCurrency { get; set; }
+    public String toCurrency { get; set; }
+    public String result { get; set; }
+
+    public CurrencyConverter() {
+        amount = 0;
+        fromCurrency = 'USD';
+        toCurrency = 'INR';
+        result = '';
+    }
+
+    public void convert() {
+        try {
+            if (amount == null || amount <= 0) {
+                result = 'Error: Please enter a valid amount greater than 0.';
+                return;
+            }
+
+            Decimal rate = getConversionRate(fromCurrency, toCurrency);
+
+            if (rate == -1) {
+                result = 'Error: Unsupported currency conversion.';
+                return;
+            }
+
+            Decimal convertedAmount = amount * rate;
+            result = amount + ' ' + fromCurrency + ' = ' + String.valueOf(convertedAmount.setScale(2)) + ' ' + toCurrency;
+        } catch (Exception e) {
+            result = 'Error: Conversion failed. ' + e.getMessage();
+        }
+    }
+
+    private Decimal getConversionRate(String fromCur, String toCur) {
+        // Example static rates (these are just sample numbers)
+        Map<String, Map<String, Decimal>> rates = new Map<String, Map<String, Decimal>>();
+
+        rates.put('USD', new Map<String, Decimal>{
+            'INR' => 83.0,
+            'EUR' => 0.92,
+            'USD' => 1.0
+        });
+
+        rates.put('INR', new Map<String, Decimal>{
+            'USD' => 0.012,
+            'EUR' => 0.011,
+            'INR' => 1.0
+        });
+
+        rates.put('EUR', new Map<String, Decimal>{
+            'USD' => 1.09,
+            'INR' => 90.0,
+            'EUR' => 1.0
+        });
+
+        if (rates.containsKey(fromCur) && rates.get(fromCur).containsKey(toCur)) {
+            return rates.get(fromCur).get(toCur);
+        } else {
+            return -1; // Invalid conversion
+        }
+    }
+
+    public List<SelectOption> getCurrencyOptions() {
+        return new List<SelectOption>{
+            new SelectOption('USD', 'USD'),
+            new SelectOption('INR', 'INR'),
+            new SelectOption('EUR', 'EUR')
+        };
+    }
+}
+
+
+********************************************************************************************
+
+
+<apex:page controller="CurrencyConverter">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-coins"></i> Currency Converter</h1>
+            <apex:pageBlock title="Convert Currency">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Amount:" styleClass="form-label"/>
+                    <apex:inputText value="{!amount}" style="width: 100%; padding: 6px;" />
+
+                    <apex:outputLabel value="From Currency:" styleClass="form-label"/>
+                    <apex:selectList value="{!fromCurrency}" size="1" style="width: 100%; padding: 6px;">
+                        <apex:selectOptions value="{!currencyOptions}" />
+                    </apex:selectList>
+
+                    <apex:outputLabel value="To Currency:" styleClass="form-label"/>
+                    <apex:selectList value="{!toCurrency}" size="1" style="width: 100%; padding: 6px;">
+                        <apex:selectOptions value="{!currencyOptions}" />
+                    </apex:selectList>
+
+                    <apex:commandButton value="Convert" action="{!convert}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="{!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>

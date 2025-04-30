@@ -1,0 +1,221 @@
+public class Fibonacci {
+    public Integer startRange { get; set; }
+    public Integer endRange { get; set; }
+    public String result { get; set; }
+
+    public Fibonacci() {
+        startRange = 0;
+        endRange = 0;
+        result = '';
+    }
+
+    public void findFibonacciRange() {
+        try {
+            List<Integer> fibonacciNumbers = new List<Integer>();
+            Integer a = 0, b = 1;
+            
+            // If startRange is 0, add 0 as the first number in the Fibonacci sequence
+            if (startRange <= 0) {
+                fibonacciNumbers.add(a);
+            }
+            
+            // Generate Fibonacci numbers up to the endRange
+            while (b <= endRange) {
+                if (b >= startRange) {
+                    fibonacciNumbers.add(b);
+                }
+                Integer next = a + b;
+                a = b;
+                b = next;
+            }
+
+            // Prepare the result as a comma-separated string
+            result = String.join(fibonacciNumbers, ', ');
+        } catch (Exception e) {
+            result = 'Error: Invalid Input';
+        }
+    }
+}
+
+***********************************************************************************************************************************
+
+<apex:page controller="Fibonacci">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-seedling"></i> Fibonacci Number Finder</h1>
+            <apex:pageBlock title="Find Fibonacci Numbers in a Range">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Enter Start Range:" styleClass="form-label"/>
+                    <apex:inputText value="{!startRange}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:outputLabel value="Enter End Range:" styleClass="form-label"/>
+                    <apex:inputText value="{!endRange}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:commandButton value="Find Fibonacci Numbers" action="{!findFibonacciRange}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="Fibonacci Numbers: {!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+public class Fibonacci {
+    public Integer numberOfTerms { get; set; }  // User input for how many Fibonacci numbers to generate
+    public String result { get; set; }
+
+    public Fibonacci() {
+        numberOfTerms = 0;
+        result = '';
+    }
+
+    public void findFibonacci() {
+        try {
+            List<Integer> fibonacciNumbers = new List<Integer>();
+            Integer a = 0, b = 1;
+
+            // Add the first two Fibonacci numbers
+            if (numberOfTerms >= 1) fibonacciNumbers.add(a);
+            if (numberOfTerms >= 2) fibonacciNumbers.add(b);
+            
+            // Generate Fibonacci numbers up to the numberOfTerms
+            for (Integer i = 3; i <= numberOfTerms; i++) {
+                Integer next = a + b;
+                fibonacciNumbers.add(next);
+                a = b;
+                b = next;
+            }
+
+            // Prepare the result as a comma-separated string
+            result = String.join(fibonacciNumbers, ', ');
+        } catch (Exception e) {
+            result = 'Error: Invalid Input';
+        }
+    }
+}
+
+*************************************************************************************************************************************
+
+<apex:page controller="Fibonacci">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-seedling"></i> Fibonacci Number Finder</h1>
+            <apex:pageBlock title="Find First N Fibonacci Numbers">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Enter Number of Terms:" styleClass="form-label"/>
+                    <apex:inputText value="{!numberOfTerms}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:commandButton value="Find Fibonacci Numbers" action="{!findFibonacci}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="Fibonacci Numbers: {!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>

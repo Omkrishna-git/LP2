@@ -1,0 +1,216 @@
+public class ShapeAreaCalculator {
+    public String shapeType { get; set; }
+    public Decimal side { get; set; }
+    public Decimal length { get; set; }
+    public Decimal width { get; set; }
+    public Decimal radius { get; set; }
+    public Decimal base { get; set; }
+    public Decimal height { get; set; }
+    public Decimal base1 { get; set; }
+    public Decimal base2 { get; set; }
+    public Decimal area { get; set; }
+    public String result { get; set; }
+
+    public ShapeAreaCalculator() {
+        shapeType = 'Square';
+        side = 0;
+        length = 0;
+        width = 0;
+        radius = 0;
+        base = 0;
+        height = 0;
+        base1 = 0;
+        base2 = 0;
+        area = 0;
+        result = '';
+    }
+
+    public void calculateArea() {
+        try {
+            if (shapeType == 'Square') {
+                if (side <= 0) {
+                    result = 'Error: Side must be greater than 0.';
+                    return;
+                }
+                area = side * side;
+                result = 'Area of Square: ' + area + ' square units.';
+            } else if (shapeType == 'Rectangle') {
+                if (length <= 0 || width <= 0) {
+                    result = 'Error: Length and Width must be greater than 0.';
+                    return;
+                }
+                area = length * width;
+                result = 'Area of Rectangle: ' + area + ' square units.';
+            } else if (shapeType == 'Circle') {
+                if (radius <= 0) {
+                    result = 'Error: Radius must be greater than 0.';
+                    return;
+                }
+                area = Math.PI * radius * radius;
+                result = 'Area of Circle: ' + area + ' square units.';
+            } else if (shapeType == 'Triangle') {
+                if (base <= 0 || height <= 0) {
+                    result = 'Error: Base and Height must be greater than 0.';
+                    return;
+                }
+                area = 0.5 * base * height;
+                result = 'Area of Triangle: ' + area + ' square units.';
+            } else if (shapeType == 'Parallelogram') {
+                if (base <= 0 || height <= 0) {
+                    result = 'Error: Base and Height must be greater than 0.';
+                    return;
+                }
+                area = base * height;
+                result = 'Area of Parallelogram: ' + area + ' square units.';
+            } else if (shapeType == 'Trapezoid') {
+                if (base1 <= 0 || base2 <= 0 || height <= 0) {
+                    result = 'Error: Bases and Height must be greater than 0.';
+                    return;
+                }
+                area = 0.5 * (base1 + base2) * height;
+                result = 'Area of Trapezoid: ' + area + ' square units.';
+            } else {
+                result = 'Error: Unsupported shape selected.';
+            }
+        } catch (Exception e) {
+            result = 'Error: ' + e.getMessage();
+        }
+    }
+
+    public List<SelectOption> getShapeOptions() {
+        return new List<SelectOption>{
+            new SelectOption('Square', 'Square'),
+            new SelectOption('Rectangle', 'Rectangle'),
+            new SelectOption('Circle', 'Circle'),
+            new SelectOption('Triangle', 'Triangle'),
+            new SelectOption('Parallelogram', 'Parallelogram'),
+            new SelectOption('Trapezoid', 'Trapezoid')
+        };
+    }
+}
+
+
+********************************************************************************************
+
+
+<apex:page controller="ShapeAreaCalculator">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+        .select-list {
+            width: 100%;
+            padding: 6px;
+        }
+        .input-text {
+            width: 100%;
+            padding: 6px;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-square"></i> Area Calculator</h1>
+            <apex:pageBlock title="Calculate Area">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Select Shape:" styleClass="form-label"/>
+                    <apex:selectList value="{!shapeType}" size="1" styleClass="select-list" id="shapeSelect">
+                        <apex:selectOptions value="{!shapeOptions}" />
+                        <apex:actionSupport event="onchange" rerender="inputFields"/>
+                    </apex:selectList>
+
+                    <apex:outputPanel id="inputFields">
+                        <apex:outputPanel rendered="{!shapeType == 'Square'}">
+                            <apex:outputLabel value="Side:" styleClass="form-label"/>
+                            <apex:inputText value="{!side}" id="square_side" styleClass="input-text"/>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!shapeType == 'Rectangle'}">
+                            <apex:outputLabel value="Length:" styleClass="form-label"/>
+                            <apex:inputText value="{!length}" id="rectangle_length" styleClass="input-text"/>
+                            <apex:outputLabel value="Width:" styleClass="form-label"/>
+                            <apex:inputText value="{!width}" id="rectangle_width" styleClass="input-text"/>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!shapeType == 'Circle'}">
+                            <apex:outputLabel value="Radius:" styleClass="form-label"/>
+                            <apex:inputText value="{!radius}" id="circle_radius" styleClass="input-text"/>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!shapeType == 'Triangle'}">
+                            <apex:outputLabel value="Base:" styleClass="form-label"/>
+                            <apex:inputText value="{!base}" id="triangle_base" styleClass="input-text"/>
+                            <apex:outputLabel value="Height:" styleClass="form-label"/>
+                            <apex:inputText value="{!height}" id="triangle_height" styleClass="input-text"/>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!shapeType == 'Parallelogram'}">
+                            <apex:outputLabel value="Base:" styleClass="form-label"/>
+                            <apex:inputText value="{!base}" id="parallelogram_base" styleClass="input-text"/>
+                            <apex:outputLabel value="Height:" styleClass="form-label"/>
+                            <apex:inputText value="{!height}" id="parallelogram_height" styleClass="input-text"/>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!shapeType == 'Trapezoid'}">
+                            <apex:outputLabel value="Base 1:" styleClass="form-label"/>
+                            <apex:inputText value="{!base1}" id="trapezoid_base1" styleClass="input-text"/>
+                            <apex:outputLabel value="Base 2:" styleClass="form-label"/>
+                            <apex:inputText value="{!base2}" id="trapezoid_base2" styleClass="input-text"/>
+                            <apex:outputLabel value="Height:" styleClass="form-label"/>
+                            <apex:inputText value="{!height}" id="trapezoid_height" styleClass="input-text"/>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+
+                    <apex:commandButton value="Calculate Area" action="{!calculateArea}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="{!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>

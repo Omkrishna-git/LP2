@@ -1,0 +1,108 @@
+public class ArrayAdd {
+    public String arrayInput1 { get; set; }
+    public String arrayInput2 { get; set; }
+    public String result { get; set; }
+
+    public ArrayAdd() {
+        arrayInput1 = '';
+        arrayInput2 = '';
+        result = '';
+    }
+
+    public void addArrays() {
+        try {
+            List<String> arr1 = arrayInput1.split(',');
+            List<String> arr2 = arrayInput2.split(',');
+            Integer len = Math.min(arr1.size(), arr2.size());
+
+            List<String> sumArray = new List<String>();
+
+            for (Integer i = 0; i < len; i++) {
+                Integer num1 = Integer.valueOf(arr1[i].trim());
+                Integer num2 = Integer.valueOf(arr2[i].trim());
+                sumArray.add(String.valueOf(num1 + num2));
+            }
+
+            result = '[' + String.join(sumArray, ', ') + ']';
+        } catch (Exception e) {
+            result = 'Error: Please enter valid comma-separated numbers.';
+        }
+    }
+}
+
+
+****************************************************************************************************************************
+
+
+
+<apex:page controller="ArrayAdd">
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f7;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2E86C1;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495E;
+            margin-top: 10px;
+        }
+        .page-wrapper {
+            max-width: 500px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .convert-button {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .convert-button:hover {
+            background-color: #1B4F72;
+            cursor: pointer;
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #1C2833;
+            font-weight: bold;
+        }
+    </style>
+
+    <apex:form>
+        <div class="page-wrapper">
+            <h1><i class="fas fa-plus"></i> Array Addition</h1>
+            <apex:pageBlock title="Add Two Arrays">
+                <apex:pageBlockSection columns="1">
+                    <apex:outputLabel value="Enter First Array (comma-separated):" styleClass="form-label"/>
+                    <apex:inputText value="{!arrayInput1}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:outputLabel value="Enter Second Array (comma-separated):" styleClass="form-label"/>
+                    <apex:inputText value="{!arrayInput2}" style="width: 100%; padding: 6px;"/>
+
+                    <apex:commandButton value="Add Arrays" action="{!addArrays}" rerender="resultPanel" styleClass="convert-button"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="resultPanel" styleClass="result-section">
+                <apex:outputText rendered="{!NOT(ISNULL(result))}" value="Result: {!result}" />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>
