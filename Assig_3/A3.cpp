@@ -203,7 +203,7 @@ int main() {
             int nodes, edges, u, v, wt;
             cout << "Enter number of nodes and edges: ";
             cin >> nodes >> edges;
-
+ 
             cout << "Enter edges (u v weight):\n";
             for (int i = 0; i < edges; i++) {
                 cin >> u >> v >> wt;

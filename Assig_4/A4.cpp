@@ -108,7 +108,7 @@ void PrintBoard(const vector<vector<bool>> &board) {
 
 
 
-
+ 
 #include <iostream>
 #include <vector>
 #include <cmath>

@@ -45,7 +45,7 @@ int evaluate(const vector < vector < char >> & board)
     // Check diagonals
     if (board[0][0] == board[1][1] && board[1][1] == board[2][2])
     {
-        if (board[0][0] == 'X')
+        if (board[0][0] == 'X') 
             return +10;
         if (board[0][0] == 'O')
             return -10;
