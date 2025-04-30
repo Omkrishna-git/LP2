@@ -1,0 +1,28 @@
+| Sr. No. | Problem Statement                                                                                      | Category                    |
+|---------|--------------------------------------------------------------------------------------------------------|-----------------------------|
+| 1       | Creating an application to perform **currency conversion** in Salesforce using Apex                   | Apex Application            |
+| 2       | Creating an application for **Fibonacci series** generation using Apex                                 | Apex Application            |
+| 3       | Creating an application to develop a **scientific calculator** using Apex                              | Apex Application            |
+| 4       | Creating an application to determine **whether a number is prime** using Apex                          | Apex Application            |
+| 5       | Creating an application to **calculate area of geometry** using Apex                                   | Apex Application            |
+| 6       | Creating an application to perform **Breadth First Search (BFS)** using Apex                           | Apex + Algorithm            |
+| 7       | Creating an application to perform **array addition** using Apex                                       | Apex Application            |
+| 8       | Creating an application to perform **matrix addition** using Apex                                      | Apex Application            |
+| 9       | Creating an application to perform **matrix multiplication** using Apex                                | Apex Application            |
+| 10      | Creating an application to calculate **first 100 natural numbers** using Apex                          | Apex Application            |
+| 11      | Creating an application to perform **temperature conversion** using Apex                               | Apex Application            |
+| 12      | Creating an application to **calculate compound interest** using Apex                                  | Apex Application            |
+| 13      | Implement **Depth First Search (DFS)** and **Breadth First Search (BFS)** using recursive approach     | AI Algorithm                |
+| 14      | Implement **A\* Search Algorithm** for any game search problem                                          | AI Algorithm                |
+| 15      | Implement **Greedy Search Algorithm** for selection sort                                               | Algorithm + Sorting         |
+| 16      | Apply Greedy Search Algorithm for **Minimum Spanning Tree (MST)**                                      | Greedy + Graph              |
+| 17      | Apply Greedy Search Algorithm for **Single-Source Shortest Path Problem**                              | Greedy + Graph              |
+| 18      | Apply Greedy Search Algorithm for **Job Scheduling Problem**                                           | Greedy + Scheduling         |
+| 19      | Implement **Prim's MST Algorithm**                                                                      | Graph Algorithm             |
+| 20      | Implement **Kruskal's MST Algorithm**                                                                   | Graph Algorithm             |
+| 21      | Implement **Dijkstra's Shortest Path Algorithm**                                                       | Graph Algorithm             |
+| 22      | Solve **Constraint Satisfaction Problem** using **Backtracking** for **graph coloring**               | CSP + Backtracking          |
+| 23      | Solve **CSP using Branch and Bound** for **graph coloring**                                            | CSP + Branch and Bound      |
+| 24      | Develop a **smart chatbot** for a customer interaction application                                     | NLP / ML Application        |
+| 25      | Implement any **one Expert System** (e.g. hospital, stock market, airline, etc.) using suitable tools  | Expert System               |
+| 26      | Design and develop a **Custom Mini Project using Salesforce Cloud**                                    | Capstone / Project          |
