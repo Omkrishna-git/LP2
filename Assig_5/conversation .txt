@@ -1,4 +1,11 @@
 
+pip install nltk
+
+python -m nltk.downloader all
+
+----------------------------------------------------------------------------------
+
+
 Hi
 
 What movies are available?
