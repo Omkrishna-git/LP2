@@ -1,21 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Graph {
+class Graph
+{
 public:
     unordered_map<int, list<pair<int, int>>> adjList;
 
-    void addEdge(int u, int v, int wt, bool direction) {
+    void addEdge(int u, int v, int wt, bool direction)
+    {
         adjList[u].push_back({v, wt});
-        if (!direction) {
+        if (!direction)
+        {
             adjList[v].push_back({u, wt});
         }
     }
 
-    void printGraph() {
-        for (auto& i : adjList) {
+    void printGraph()
+    {
+        for (auto &i : adjList)
+        {
             cout << i.first << " -> ";
-            for (auto& nbr : i.second) {
+            for (auto &nbr : i.second)
+            {
                 cout << "(" << nbr.first << ", " << nbr.second << ") ";
             }
             cout << endl;
@@ -23,9 +29,11 @@ public:
     }
 
     // Dijkstra’s Algorithm
-    void dijkstra(int src) {
+    void dijkstra(int src)
+    {
         unordered_map<int, int> dist;
-        for (auto& i : adjList) {
+        for (auto &i : adjList)
+        {
             dist[i.first] = INT_MAX;
         }
 
@@ -33,16 +41,20 @@ public:
         dist[src] = 0;
         s.insert({0, src});
 
-        while (!s.empty()) {
+        while (!s.empty())
+        {
             auto top = *(s.begin());
             int nodeDist = top.first;
             int topNode = top.second;
             s.erase(s.begin());
 
-            for (auto& nbr : adjList[topNode]) {
-                if (nodeDist + nbr.second < dist[nbr.first]) {
+            for (auto &nbr : adjList[topNode])
+            {
+                if (nodeDist + nbr.second < dist[nbr.first])
+                {
                     auto record = s.find({dist[nbr.first], nbr.first});
-                    if (record != s.end()) {
+                    if (record != s.end())
+                    {
                         s.erase(record);
                     }
 
@@ -53,76 +65,148 @@ public:
         }
 
         cout << "Shortest distances from node " << src << ":" << endl;
-        for (auto& d : dist) {
+        for (auto &d : dist)
+        {
             cout << "Node " << d.first << " -> Distance: " << d.second << endl;
         }
     }
 
     // Prim’s Algorithm
-    void primMST() {
+    void primMST()
+    {
         unordered_map<int, int> key;
-        unordered_map<int, bool> mstSet;
+        unordered_map<int, bool> mst;
         unordered_map<int, int> parent;
 
-        for (auto& i : adjList) {
+        for (auto &i : adjList)
+        {
             key[i.first] = INT_MAX;
-            mstSet[i.first] = false;
+            mst[i.first] = false;
             parent[i.first] = -1;
         }
 
-        key.begin()->second = 0;
-        set<pair<int, int>> s;
-        s.insert({0, key.begin()->first});
+        // Start from any node (first in the map)
+        int startNode = adjList.begin()->first;
+        key[startNode] = 0;
 
-        while (!s.empty()) {
-            auto top = *(s.begin());
-            int u = top.second;
-            s.erase(s.begin());
-            mstSet[u] = true;
+        int n = adjList.size();
 
-            for (auto& nbr : adjList[u]) {
+        for (int count = 0; count < n - 1; count++)
+        {
+            int mini = INT_MAX, u = -1;
+
+            // Find the minimum key node not yet included in MST
+            for (auto &i : adjList)
+            {
+                int node = i.first;
+                if (!mst[node] && key[node] < mini)
+                {
+                    mini = key[node];
+                    u = node;
+                }
+            }
+
+            if (u == -1)
+                break; // all nodes connected
+
+            mst[u] = true;
+
+            for (auto &nbr : adjList[u])
+            {
                 int v = nbr.first;
-                int weight = nbr.second;
-                if (!mstSet[v] && weight < key[v]) {
-                    s.erase({key[v], v});
-                    key[v] = weight;
-                    s.insert({key[v], v});
+                int wt = nbr.second;
+                if (!mst[v] && wt < key[v])
+                {
+                    key[v] = wt;
                     parent[v] = u;
                 }
             }
         }
 
-        cout << "Minimum Spanning Tree (Prim's Algorithm):" << endl;
-        int totalSum = 0;
-        for (auto& i : parent) {
-            if (i.second != -1){
+        cout << "Minimum Spanning Tree (Prim's Algorithm):\n";
+        int totalWeight = 0;
+        for (auto &i : parent)
+        {
+            if (i.second != -1)
+            {
                 cout << "Edge: " << i.second << " - " << i.first << " | Weight: " << key[i.first] << endl;
-                totalSum += key[i.first];
+                totalWeight += key[i.first];
+            }
+        }
+        cout << "Total Sum of weight of edges included in Prims Algo: " << totalWeight << endl;
+    }
+
+    void primMST(int n)
+    {
+        vector<int> key(n + 1, INT_MAX);
+        vector<bool> mst(n + 1, false);
+        vector<int> parent(n + 1, -1);
+
+        key[1] = 0; 
+
+        for (int count = 1; count <= n - 1; count++) {
+            int mini = INT_MAX, u = -1;
+
+            // Pick the minimum key vertex not yet in MST
+            for (int v = 1; v <= n; v++) {
+                if (!mst[v] && key[v] < mini)
+                {
+                    mini = key[v];
+                    u = v;
+                }
             }
 
+            if (u == -1)
+                break; // All remaining nodes are disconnected
+
+            mst[u] = true;
+
+            for (auto &nbr : adjList[u])
+            {
+                int v = nbr.first;
+                int weight = nbr.second;
+                if (!mst[v] && weight < key[v])
+                {
+                    key[v] = weight;
+                    parent[v] = u;
+                }
+            }
         }
-        cout<<"Total Sum of weight of edges included in Prims Algo : "<<totalSum<<endl;
+
+        cout << "Minimum Spanning Tree (Prim's Algorithm):\n";
+        int totalWeight = 0;
+        for (int i = 2; i <= n; i++) {
+            if (parent[i] != -1) {
+                cout << "Edge: " << parent[i] << " - " << i << " | Weight: " << key[i] << endl;
+                totalWeight += key[i];
+            }
+        }
+        cout << "Total Sum of weight of edges included in Prims Algo: " << totalWeight << endl;
     }
 };
- 
-int main() {
+
+int main()
+{
     int choice;
-    do {
+    do
+    {
         cout << "\nMenu:\n";
         cout << "1. Dijkstra's Algorithm (Shortest Path)\n";
         cout << "2. Prim's Algorithm (Minimum Spanning Tree)\n";
-        cout << "4. Exit\n";
+        cout << "3. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
 
-        if (choice == 1) {
+        if (choice == 1)
+        {
             Graph g;
             int nodes, edges, u, v, wt, src;
             cout << "Enter number of nodes and edges: ";
             cin >> nodes >> edges;
 
             cout << "Enter edges (u v weight):\n";
-            for (int i = 0; i < edges; i++) {
+            for (int i = 0; i < edges; i++)
+            {
                 cin >> u >> v >> wt;
                 g.addEdge(u, v, wt, false);
             }
@@ -132,16 +216,17 @@ int main() {
             cout << "Enter source node for Dijkstra's Algorithm: ";
             cin >> src;
             g.dijkstra(src);
-
-        } 
-        else if (choice == 2) {
+        }
+        else if (choice == 2)
+        {
             Graph g;
             int nodes, edges, u, v, wt;
             cout << "Enter number of nodes and edges: ";
             cin >> nodes >> edges;
- 
+
             cout << "Enter edges (u v weight):\n";
-            for (int i = 0; i < edges; i++) {
+            for (int i = 0; i < edges; i++)
+            {
                 cin >> u >> v >> wt;
                 g.addEdge(u, v, wt, false);
             }
@@ -149,12 +234,13 @@ int main() {
             cout << "Graph Representation:\n";
             g.printGraph();
             g.primMST();
-
-        } 
-        else if (choice == 3) {
+        }
+        else if (choice == 3)
+        {
             cout << "Exiting...\n";
         }
-        else {
+        else
+        {
             cout << "Invalid choice! Please enter a valid option.\n";
         }
 
@@ -163,16 +249,15 @@ int main() {
     return 0;
 }
 
-
-// Graph g ; 
+// Graph g ;
 //     g.addNode( "Katraj" , "PICT" ) ;
-//     g.addNode( "Bharti" , "Katraj" ) ; 
+//     g.addNode( "Bharti" , "Katraj" ) ;
 //     g.addNode( "Bharti" , "PICT" ) ;
-//     g.addNode( "Katraj" , "SKNCOE" ) ; 
+//     g.addNode( "Katraj" , "SKNCOE" ) ;
 //     g.addNode( "PICT" , "SKNCOE" ) ;
-//     g.addNode( "SKNCOE" , "Temple" ) ; 
-//     g.addNode( "Temple" , "Katraj" ) ; 
-//     g.addNode( "Temple" , "Kondhwa" ) ; 
+//     g.addNode( "SKNCOE" , "Temple" ) ;
+//     g.addNode( "Temple" , "Katraj" ) ;
+//     g.addNode( "Temple" , "Kondhwa" ) ;
 
 // 3 1
 // 5 2
@@ -187,8 +272,6 @@ int main() {
 // 1 2 3
 // 2 4 7
 
-
-
 // 1 2 28
 // 1 6 10
 // 6 5 25
@@ -198,5 +281,3 @@ int main() {
 // 3 4 12
 // 2 3 16
 // 2 7 14
-
-
