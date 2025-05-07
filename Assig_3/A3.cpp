@@ -105,7 +105,7 @@ public:
                     u = node;
                 }
             }
- 
+
             if (u == -1)
                 break; // all nodes connected
 
@@ -142,13 +142,15 @@ public:
         vector<bool> mst(n + 1, false);
         vector<int> parent(n + 1, -1);
 
-        key[1] = 0; 
+        key[1] = 0;
 
-        for (int count = 1; count <= n - 1; count++) {
+        for (int count = 1; count <= n - 1; count++)
+        {
             int mini = INT_MAX, u = -1;
 
             // Pick the minimum key vertex not yet in MST
-            for (int v = 1; v <= n; v++) {
+            for (int v = 1; v <= n; v++)
+            {
                 if (!mst[v] && key[v] < mini)
                 {
                     mini = key[v];
@@ -175,8 +177,10 @@ public:
 
         cout << "Minimum Spanning Tree (Prim's Algorithm):\n";
         int totalWeight = 0;
-        for (int i = 2; i <= n; i++) {
-            if (parent[i] != -1) {
+        for (int i = 2; i <= n; i++)
+        {
+            if (parent[i] != -1)
+            {
                 cout << "Edge: " << parent[i] << " - " << i << " | Weight: " << key[i] << endl;
                 totalWeight += key[i];
             }
@@ -184,6 +188,27 @@ public:
         cout << "Total Sum of weight of edges included in Prims Algo: " << totalWeight << endl;
     }
 };
+
+void selectionSort(int arr[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        // Find the index of the minimum element in the unsorted part
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++)
+        {
+            if (arr[j] < arr[min_idx])
+            {
+                min_idx = j;
+            }
+        }
+        // Swap the minimum element with the first element of the unsorted part
+        if (min_idx != i)
+        {
+            swap(arr[i], arr[min_idx]);
+        }
+    }
+}
 
 int main()
 {
@@ -193,7 +218,8 @@ int main()
         cout << "\nMenu:\n";
         cout << "1. Dijkstra's Algorithm (Shortest Path)\n";
         cout << "2. Prim's Algorithm (Minimum Spanning Tree)\n";
-        cout << "3. Exit\n";
+        cout << "3. Selection Sort\n";
+        cout << "4. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -236,6 +262,20 @@ int main()
             g.primMST();
         }
         else if (choice == 3)
+        {
+            int arr[] = {64, 25, 12, 22, 11};
+            int n = sizeof(arr) / sizeof(arr[0]);
+
+            selectionSort(arr, n);
+
+            cout << "Sorted array: ";
+            for (int i = 0; i < n; i++)
+            {
+                cout << arr[i] << " ";
+            }
+            cout << endl;
+        }
+        else if (choice == 4)
         {
             cout << "Exiting...\n";
         }
