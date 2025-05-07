@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+ 
 const int N = 3;
 const vector<vector<int>> goal = {
     {1, 2, 3},
