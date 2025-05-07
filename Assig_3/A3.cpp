@@ -28,7 +28,8 @@ public:
         }
     }
 
-    // Dijkstra’s Algorithm
+    // Dijkstra’s Algorithm  
+    // Time :- O(E log(v))             Space :- O(N+E)
     void dijkstra(int src)
     {
         unordered_map<int, int> dist;
@@ -71,7 +72,8 @@ public:
         }
     }
 
-    // Prim’s Algorithm
+    // Prim’s Algorithm  
+    // 
     void primMST()
     {
         unordered_map<int, int> key;
