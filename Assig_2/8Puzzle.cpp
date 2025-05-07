@@ -1,160 +1,139 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <cmath>
-#include <algorithm>
-#include <unordered_set>
-
+#include <bits/stdc++.h>
 using namespace std;
 
 const int N = 3;
+const vector<vector<int>> goal = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 0}
+};
 
-class PuzzleState {
-public:
-    int puzzle[N][N];
-    int zeroRow, zeroCol;
-    int g;
-    int h;
+struct Node {
+    vector<vector<int>> state;
+    int x, y; // position of 0
+    int g, h;
+    vector<string> path; // store moves
 
-    PuzzleState() {
-        zeroRow = zeroCol = g = h = 0;
-        for (int i = 0; i < N; ++i)
-            for (int j = 0; j < N; ++j)
-                puzzle[i][j] = 0;
-    }
-
-    bool operator<(const PuzzleState &other) const {
-        return (g + h) > (other.g + other.h); // min-heap based on f(n)
+    bool operator>(const Node& other) const {
+        return (g + h) > (other.g + other.h);
     }
 };
 
-void printPuzzle(const PuzzleState &state) {
+int manhattan(const vector<vector<int>>& a) {
+    int dist = 0;
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            cout << state.puzzle[i][j] << " ";
-        }
-        cout << endl;
-    }
-    cout << "-----\n";
-}
-
-bool isEqual(const PuzzleState &state1, const PuzzleState &state2) {
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < N; j++)
-            if (state1.puzzle[i][j] != state2.puzzle[i][j])
-                return false;
-    return true;
-}
-
-int calculateManhattanDistance(const PuzzleState &state) {
-    int distance = 0;
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            int value = state.puzzle[i][j];
-            if (value != 0) {
-                int targetRow = (value - 1) / N;
-                int targetCol = (value - 1) % N;
-                distance += abs(i - targetRow) + abs(j - targetCol);
-            }
+            int val = a[i][j];
+            if (val == 0) continue;
+            int targetX = (val - 1) / N;
+            int targetY = (val - 1) % N;
+            dist += abs(i - targetX) + abs(j - targetY);
         }
     }
-    return distance;
+    return dist;
 }
 
-bool isValid(int row, int col) {
-    return (row >= 0 && row < N && col >= 0 && col < N);
+bool isGoal(const vector<vector<int>>& a) {
+    return a == goal;
 }
 
-vector<PuzzleState> generateNextStates(const PuzzleState &currentState) {
-    vector<PuzzleState> nextStates;
-    const int moves[4][2] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}}; // L, R, U, D
+vector<Node> getNeighbors(Node node) {
+    vector<Node> neighbors;
+    int dx[] = {-1, 1, 0, 0};
+    int dy[] = {0, 0, -1, 1};
+    string dir[] = {"Up", "Down", "Left", "Right"};
 
     for (int k = 0; k < 4; k++) {
-        int nextZeroRow = currentState.zeroRow + moves[k][0];
-        int nextZeroCol = currentState.zeroCol + moves[k][1];
+        int nx = node.x + dx[k];
+        int ny = node.y + dy[k];
 
-        if (isValid(nextZeroRow, nextZeroCol)) {
-            PuzzleState nextState = currentState;
-            swap(nextState.puzzle[currentState.zeroRow][currentState.zeroCol],
-                 nextState.puzzle[nextZeroRow][nextZeroCol]);
-            nextState.zeroRow = nextZeroRow;
-            nextState.zeroCol = nextZeroCol;
-            nextState.g = currentState.g + 1;
-            nextState.h = calculateManhattanDistance(nextState);
-            nextStates.push_back(nextState);
+        if (nx >= 0 && nx < N && ny >= 0 && ny < N) {
+            vector<vector<int>> newState = node.state;
+            swap(newState[node.x][node.y], newState[nx][ny]);
+            Node neighbor = {newState, nx, ny, node.g + 1, manhattan(newState), node.path};
+            neighbor.path.push_back(dir[k]);
+            neighbors.push_back(neighbor);
         }
     }
-    return nextStates;
+    return neighbors;
 }
 
-void aStarSearch(const PuzzleState &initialState, const PuzzleState &finalState) {
-    priority_queue<PuzzleState> pq;
-    unordered_set<int> visited;
+void printState(const vector<vector<int>>& state) {
+    for (auto row : state) {
+        for (int val : row) cout << val << " ";
+        cout << "\n";
+    }
+}
 
-    pq.push(initialState);
+void solve(vector<vector<int>> start) {
+    int sx, sy;
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            if (start[i][j] == 0) sx = i, sy = j;
+
+    priority_queue<Node, vector<Node>, greater<Node>> pq;
+    set<vector<vector<int>>> visited;
+
+    Node startNode = {start, sx, sy, 0, manhattan(start), {}};
+    pq.push(startNode);
 
     while (!pq.empty()) {
-        PuzzleState current = pq.top();
+        Node current = pq.top();
         pq.pop();
 
-        cout << "Current State:\n";
-        printPuzzle(current);
-        cout << "g(n): " << current.g << ", h(n): " << current.h << ", f(n): " << (current.g + current.h) << "\n";
-        cout << "-------------------\n";
+        if (visited.count(current.state)) continue;
+        visited.insert(current.state);
 
-        if (isEqual(current, finalState)) {
-            cout << "Goal State Reached!\n";
-            cout << "Moves: " << current.g << ", Heuristic cost: " << current.h << endl;
-            break;
+        cout << "Current state (g = " << current.g << ", h = " << current.h << ", f = " << current.g + current.h << "):\n";
+        printState(current.state);
+        cout << "----\n";
+
+        if (isGoal(current.state)) {
+            cout << "Goal reached in " << current.g << " moves.\n";
+            cout << "Path: ";
+            for (auto move : current.path) cout << move << " ";
+            cout << "\n";
+            return;
         }
 
-        vector<PuzzleState> nextStates = generateNextStates(current);
-        for (const PuzzleState &nextState : nextStates) {
-            int hash = 0;
-            for (int i = 0; i < N; i++)
-                for (int j = 0; j < N; j++)
-                    hash = hash * 10 + nextState.puzzle[i][j];
-
-            if (visited.find(hash) == visited.end()) {
-                pq.push(nextState);
-                visited.insert(hash);
-            }
-        }
-    }
-}
-
-PuzzleState getPuzzleState(const string &prompt) {
-    PuzzleState state;
-
-    cout << prompt << " (0 = empty tile):\n";
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            cout << "Enter value at (" << i << ", " << j << "): ";
-            cin >> state.puzzle[i][j];
-            if (state.puzzle[i][j] == 0) {
-                state.zeroRow = i;
-                state.zeroCol = j;
-            }
+        for (auto neighbor : getNeighbors(current)) {
+            if (!visited.count(neighbor.state))
+                pq.push(neighbor);
         }
     }
 
-    state.g = 0;
-    state.h = calculateManhattanDistance(state);
-    return state;
+    cout << "No solution found.\n";
 }
 
 int main() {
-    PuzzleState initialState = getPuzzleState("Initial state");
-    PuzzleState finalState = getPuzzleState("Goal state");
+    vector<vector<int>> initial(3, vector<int>(3));
+    cout << "Enter the initial state of the puzzle (0 represents the empty tile):\n";
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            cout << "Enter value at position (" << i << ", " << j << "): ";
+            cin >> initial[i][j];
+        }
+    }
 
-    cout << "Initial State:\n";
-    printPuzzle(initialState);
+    cout << "\nInitial State:\n";
+    for (auto row : initial) {
+        for (int val : row) cout << val << " ";
+        cout << "\n";
+    }
 
-    aStarSearch(initialState, finalState);
-
+    solve(initial);
     return 0;
 }
 
+// int main() {
+//     vector<vector<int>> initial = {
+//         {0, 1, 2},
+//         {4, 6, 3},
+//         {7, 5, 8}
+//     };
+//     solve(initial);
+//     return 0;
+// }
 
 
 /*
@@ -243,7 +222,6 @@ Goal State Reached!
 Number of moves: 6
 Heuristic cost: 0
 */
-
 
 
 // #include <iostream>
@@ -410,4 +388,3 @@ Heuristic cost: 0
 
 //     return 0;
 // }
-
