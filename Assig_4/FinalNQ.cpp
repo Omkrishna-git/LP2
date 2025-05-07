@@ -98,65 +98,51 @@ public:
 // ------------------------- Branch and Bound Class --------------------------
 class NQueensBranchAndBound {
 private:
-    vector<int> board; // board[i] = column position of queen in row i
     int n;
+    vector<int> board;           // board[row] = column index
+    vector<bool> colUsed;        // Track columns
+    vector<bool> diag1Used;      // Track main diagonals (row + col)
+    vector<bool> diag2Used;      // Track anti-diagonals (row - col + n - 1)
 
 public:
-    // Constructor to initialize board with -1 (no queen placed)
     NQueensBranchAndBound(int size) {
-        this->n = size;
+        n = size;
         board.resize(n, -1);
+        colUsed.resize(n, false);
+        diag1Used.resize(2 * n - 1, false);
+        diag2Used.resize(2 * n - 1, false);
     }
 
-    // Check if it's safe to place a queen at (row, col)
-    bool IsSafe(int row, int col) {
-        for (int i = 0; i < row; i++) {
-            if (board[i] == col || abs(board[i] - col) == abs(i - row))
-                return false; // Same column or diagonal
-        }
-        return true;
-    }
-
-    // Bounding function to check feasibility (optional here but included)
-    bool Bound(int row) {
-        for (int i = 0; i < row; i++) {
-            if (board[i] == -1)
-                return false; // Unassigned row found => infeasible
-        }
-        return true;
-    }
-
-    // Recursive solver using Branch and Bound
     bool SolveNQueensUtil(int row) {
         if (row == n) {
-            PrintBoard(); // Solution found
+            PrintBoard();
             return true;
         }
 
         for (int col = 0; col < n; col++) {
-            if (IsSafe(row, col)) {
-                board[row] = col; // Place queen
+            if (!colUsed[col] && !diag1Used[row + col] && !diag2Used[row - col + n - 1]) {
+                board[row] = col;
+                colUsed[col] = diag1Used[row + col] = diag2Used[row - col + n - 1] = true;
 
-                if (Bound(row) && SolveNQueensUtil(row + 1))
-                    return true; // Continue to next row
+                if (SolveNQueensUtil(row + 1))
+                    return true;
 
-                board[row] = -1; // Backtrack
+                // Backtrack
+                colUsed[col] = diag1Used[row + col] = diag2Used[row - col + n - 1] = false;
+                board[row] = -1;
             }
         }
-        return false; // No valid position found
+        return false;
     }
 
-    // Start the solving process
     bool SolveNQueens() {
         return SolveNQueensUtil(0);
     }
 
-    // Print the board
     void PrintBoard() {
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; j++)
                 cout << (board[i] == j ? "Q " : ". ");
-            }
             cout << endl;
         }
     }
@@ -202,3 +188,62 @@ int main() {
 
     return 0;
 }
+
+
+
+
+// class NQueensBackTracking {
+//     private:
+//         vector<vector<bool>> board;
+//         int n;
+    
+//     public:
+//         NQueensBackTracking(int size) {
+//             n = size;
+//             board.resize(n, vector<bool>(n, false));
+//         }
+    
+//         bool Solve(int col) {
+//             if (col >= n)
+//                 return true;
+    
+//             for (int row = 0; row < n; row++) {
+//                 if (IsSafe(row, col)) {
+//                     board[row][col] = true;
+    
+//                     if (Solve(col + 1))
+//                         return true;
+    
+//                     board[row][col] = false; // Backtrack
+//                 }
+//             }
+//             return false;
+//         }
+    
+//         bool IsSafe(int row, int col) {
+//             // Check left in same row
+//             for (int i = 0; i < col; i++)
+//                 if (board[row][i])
+//                     return false;
+    
+//             // Check upper-left diagonal
+//             for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+//                 if (board[i][j])
+//                     return false;
+    
+//             // Check lower-left diagonal
+//             for (int i = row, j = col; i < n && j >= 0; i++, j--)
+//                 if (board[i][j])
+//                     return false;
+    
+//             return true;
+//         }
+    
+//         void PrintBoard() {
+//             for (int i = 0; i < n; i++) {
+//                 for (int j = 0; j < n; j++)
+//                     cout << (board[i][j] ? "Q " : ". ");
+//                 cout << endl;
+//             }
+//         }
+//     };
