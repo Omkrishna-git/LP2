@@ -101,16 +101,16 @@ private:
     int n;
     vector<int> board;           // board[row] = column index
     vector<bool> colUsed;        // Track columns
-    vector<bool> diag1Used;      // Track main diagonals (row + col)
-    vector<bool> diag2Used;      // Track anti-diagonals (row - col + n - 1)
+    vector<bool> mainDiag;      // Track main diagonals (row + col)
+    vector<bool> antiDiag;      // Track anti-diagonals (row - col + n - 1)
 
 public:
     NQueensBranchAndBound(int size) {
         n = size;
         board.resize(n, -1);
         colUsed.resize(n, false);
-        diag1Used.resize(2 * n - 1, false);
-        diag2Used.resize(2 * n - 1, false);
+        mainDiag.resize(2 * n - 1, false);
+        antiDiag.resize(2 * n - 1, false);
     }
 
     bool SolveNQueensUtil(int row) {
@@ -120,15 +120,19 @@ public:
         }
 
         for (int col = 0; col < n; col++) {
-            if (!colUsed[col] && !diag1Used[row + col] && !diag2Used[row - col + n - 1]) {
-                board[row] = col;
-                colUsed[col] = diag1Used[row + col] = diag2Used[row - col + n - 1] = true;
 
-                if (SolveNQueensUtil(row + 1))
-                    return true;
+            int d1 = row + col;
+            int d2 = row - col + (n - 1);
+
+            if (!colUsed[col] && !mainDiag[d1] && !antiDiag[d2]) {
+                // Place Queen
+                board[row] = col;
+                colUsed[col] = mainDiag[d1] = antiDiag[d2] = true;
+
+                if (SolveNQueensUtil(row + 1)) return true;
 
                 // Backtrack
-                colUsed[col] = diag1Used[row + col] = diag2Used[row - col + n - 1] = false;
+                colUsed[col] = mainDiag[d1] = antiDiag[d2] = false;
                 board[row] = -1;
             }
         }
