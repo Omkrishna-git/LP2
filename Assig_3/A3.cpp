@@ -105,7 +105,7 @@ public:
                     u = node;
                 }
             }
-
+ 
             if (u == -1)
                 break; // all nodes connected
 

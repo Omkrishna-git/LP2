@@ -4,6 +4,7 @@ using namespace std;
 template < typename T >
 class Graph {
 public:
+
     unordered_map<T, list<pair<T, int>>> adjList;
 
     void addEdge(T u, T v, int wt, bool direction) {

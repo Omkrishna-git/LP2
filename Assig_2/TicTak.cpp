@@ -4,7 +4,7 @@ using namespace std;
 
 // Define the board size
 const int BOARD_SIZE = 3;
-
+ 
 struct GameState
 {
     vector < vector < char >> board;
