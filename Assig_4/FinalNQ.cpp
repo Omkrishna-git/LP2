@@ -2,7 +2,7 @@
 #include <vector>
 #include <cmath>
 using namespace std;
-  
+   
 // ---------------------------- Backtracking Class ----------------------------
 class NQueensBackTracking {
 private:
