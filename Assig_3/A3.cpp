@@ -73,7 +73,26 @@ public:
     }
 
     // Prim’s Algorithm  
-    // 
+    // 1. Using an Adjacency Matrix + Linear Search (Brute Force)
+    // Time: O(V^2)
+
+    // Suitable for dense graphs or when V is relatively small.
+
+    // 2. Using an Adjacency List + Min-Heap / Priority Queue
+    // Time: O((V + E) log V) using a binary heap
+
+    // V = number of vertices
+
+    // E = number of edges
+
+    // This is more efficient for sparse graphs.
+
+    // With a Fibonacci heap (theoretical), you can reduce it to O(E + V log V), but it's rarely used in practice.
+    // 1. Adjacency Matrix
+    // O(V^2)
+
+    // 2. Adjacency List
+    // O(V + E)
     void primMST()
     {
         unordered_map<int, int> key;
